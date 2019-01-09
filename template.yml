@@ -14,6 +14,25 @@ Parameters:
 
 Resources:
 
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+
+
+  Step1:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: process.step1
+      CodeUri: src/
+      Role: !GetAtt [ LambdaExecutionRole, Arn ]
+
   StatesExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -40,20 +59,32 @@ Resources:
     Type: AWS::StepFunctions::StateMachine
     Properties:
       StateMachineName: !Join [-, [DDBCaseSample, !Ref "Stage"]]
-      DefinitionString: 
-        '{
+      DefinitionString: !Sub |
+        {
           "Comment":"Sample state machine to show case data vs flow data",
           "StartAt":"step-1",
           "States": {
             "step-1": {
-              "Type":"Pass",
-              "Next":"quux"
+              "Type":"Task",
+              "Resource":"${Step1.Arn}",
+              "Next":"choiceStep"
+            },
+            "choiceStep": {
+              "Type":"Choice",
+              "Choices":[
+                {
+                  "Variable":"$.metavar",
+                  "NumericEquals": 1,
+                  "Next":"quux"
+                }
+              ],
+              "Default":"quux"
             },
             "quux": {
               "Type":"Pass",
               "End":true
             }
           }
-        }'
+        }
       RoleArn: !GetAtt [ StatesExecutionRole, Arn ]
 

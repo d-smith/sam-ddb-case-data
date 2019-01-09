@@ -12,11 +12,27 @@ Parameters:
       instantiated for a specific stack
     Type: String
 Resources:
+  LambdaExecutionRole:
+    Properties:
+      AssumeRolePolicyDocument:
+        Statement:
+        - Action: sts:AssumeRole
+          Effect: Allow
+          Principal:
+            Service: lambda.amazonaws.com
+        Version: '2012-10-17'
+    Type: AWS::IAM::Role
   Process1:
     Properties:
-      DefinitionString: '{ "Comment":"Sample state machine to show case data vs flow
-        data", "StartAt":"step-1", "States": { "step-1": { "Type":"Pass", "Next":"quux"
-        }, "quux": { "Type":"Pass", "End":true } } }'
+      DefinitionString:
+        Fn::Sub: "{\n  \"Comment\":\"Sample state machine to show case data vs flow\
+          \ data\",\n  \"StartAt\":\"step-1\",\n  \"States\": {\n    \"step-1\": {\n\
+          \      \"Type\":\"Task\",\n      \"Resource\":\"${Step1.Arn}\",\n      \"\
+          Next\":\"choiceStep\"\n    },\n    \"choiceStep\": {\n      \"Type\":\"\
+          Choice\",\n      \"Choices\":[\n        {\n          \"Variable\":\"$.metavar\"\
+          ,\n          \"NumericEquals\": 1,\n          \"Next\":\"quux\"\n      \
+          \  }\n      ],\n      \"Default\":\"quux\"\n    },\n    \"quux\": {\n  \
+          \    \"Type\":\"Pass\",\n      \"End\":true\n    }\n  }\n}\n"
       RoleArn:
         Fn::GetAtt:
         - StatesExecutionRole
@@ -48,4 +64,13 @@ Resources:
           Version: '2012-10-17'
         PolicyName: StatesExecutionPolicy
     Type: AWS::IAM::Role
+  Step1:
+    Properties:
+      CodeUri: s3://sampack-97068/e62751ebefbd59bce39d28aa75957c6c
+      Handler: process.step1
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+    Type: AWS::Serverless::Function
 Transform: AWS::Serverless-2016-10-31
