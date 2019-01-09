@@ -33,6 +33,34 @@ Resources:
       CodeUri: src/
       Role: !GetAtt [ LambdaExecutionRole, Arn ]
 
+  fooStep:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: process.fooStep
+      CodeUri: src/
+      Role: !GetAtt [ LambdaExecutionRole, Arn ]
+
+  barStep:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: process.barStep
+      CodeUri: src/
+      Role: !GetAtt [ LambdaExecutionRole, Arn ]
+
+  bazStep:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: process.bazStep
+      CodeUri: src/
+      Role: !GetAtt [ LambdaExecutionRole, Arn ]
+
+  quuxStep:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: process.quuxStep
+      CodeUri: src/
+      Role: !GetAtt [ LambdaExecutionRole, Arn ]
+
   StatesExecutionRole:
     Type: AWS::IAM::Role
     Properties:
@@ -74,14 +102,35 @@ Resources:
               "Choices":[
                 {
                   "Variable":"$.metavar",
-                  "NumericEquals": 1,
-                  "Next":"quux"
+                  "StringEquals": "foo",
+                  "Next":"fooStep"
+                },
+                {
+                  "Variable":"$.metavar",
+                  "StringEquals": "bar",
+                  "Next":"barStep"
                 }
               ],
-              "Default":"quux"
+              "Default":"bazStep"
+            },
+            "fooStep": {
+              "Type":"Task",
+              "Resource":"${fooStep.Arn}",
+              "Next":"quux"
+            },
+            "barStep": {
+              "Type":"Task",
+              "Resource":"${barStep.Arn}",
+              "Next":"quux"
+            },
+            "bazStep": {
+              "Type":"Task",
+              "Resource":"${bazStep.Arn}",
+              "Next":"quux"
             },
             "quux": {
-              "Type":"Pass",
+              "Type":"Task",
+              "Resource":"${quuxStep.Arn}",
               "End":true
             }
           }

@@ -30,9 +30,17 @@ Resources:
           \      \"Type\":\"Task\",\n      \"Resource\":\"${Step1.Arn}\",\n      \"\
           Next\":\"choiceStep\"\n    },\n    \"choiceStep\": {\n      \"Type\":\"\
           Choice\",\n      \"Choices\":[\n        {\n          \"Variable\":\"$.metavar\"\
-          ,\n          \"NumericEquals\": 1,\n          \"Next\":\"quux\"\n      \
-          \  }\n      ],\n      \"Default\":\"quux\"\n    },\n    \"quux\": {\n  \
-          \    \"Type\":\"Pass\",\n      \"End\":true\n    }\n  }\n}\n"
+          ,\n          \"StringEquals\": \"foo\",\n          \"Next\":\"fooStep\"\n\
+          \        },\n        {\n          \"Variable\":\"$.metavar\",\n        \
+          \  \"StringEquals\": \"bar\",\n          \"Next\":\"barStep\"\n        }\n\
+          \      ],\n      \"Default\":\"bazStep\"\n    },\n    \"fooStep\": {\n \
+          \     \"Type\":\"Task\",\n      \"Resource\":\"${fooStep.Arn}\",\n     \
+          \ \"Next\":\"quux\"\n    },\n    \"barStep\": {\n      \"Type\":\"Task\"\
+          ,\n      \"Resource\":\"${barStep.Arn}\",\n      \"Next\":\"quux\"\n   \
+          \ },\n    \"bazStep\": {\n      \"Type\":\"Task\",\n      \"Resource\":\"\
+          ${bazStep.Arn}\",\n      \"Next\":\"quux\"\n    },\n    \"quux\": {\n  \
+          \    \"Type\":\"Task\",\n      \"Resource\":\"${quuxStep.Arn}\",\n     \
+          \ \"End\":true\n    }\n  }\n}\n"
       RoleArn:
         Fn::GetAtt:
         - StatesExecutionRole
@@ -66,8 +74,44 @@ Resources:
     Type: AWS::IAM::Role
   Step1:
     Properties:
-      CodeUri: s3://sampack-97068/e62751ebefbd59bce39d28aa75957c6c
+      CodeUri: s3://sampack-97068/53c53c9a85c95ae536a3cadf0863c1ee
       Handler: process.step1
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+    Type: AWS::Serverless::Function
+  barStep:
+    Properties:
+      CodeUri: s3://sampack-97068/53c53c9a85c95ae536a3cadf0863c1ee
+      Handler: process.barStep
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+    Type: AWS::Serverless::Function
+  bazStep:
+    Properties:
+      CodeUri: s3://sampack-97068/53c53c9a85c95ae536a3cadf0863c1ee
+      Handler: process.bazStep
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+    Type: AWS::Serverless::Function
+  fooStep:
+    Properties:
+      CodeUri: s3://sampack-97068/53c53c9a85c95ae536a3cadf0863c1ee
+      Handler: process.fooStep
+      Role:
+        Fn::GetAtt:
+        - LambdaExecutionRole
+        - Arn
+    Type: AWS::Serverless::Function
+  quuxStep:
+    Properties:
+      CodeUri: s3://sampack-97068/53c53c9a85c95ae536a3cadf0863c1ee
+      Handler: process.quuxStep
       Role:
         Fn::GetAtt:
         - LambdaExecutionRole
