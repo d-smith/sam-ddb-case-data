@@ -63,6 +63,12 @@ Resources:
 
   StatesExecutionRole:
     Type: AWS::IAM::Role
+    DependsOn:
+      - Step1
+      - fooStep
+      - barStep
+      - bazStep
+      - quuxStep
     Properties:
       AssumeRolePolicyDocument: 
         Version: '2012-10-17'
@@ -81,7 +87,12 @@ Resources:
               - Effect: Allow
                 Action:
                   - "lambda:InvokeFunction"
-                Resource: '*'
+                Resource:
+                  - !GetAtt [ Step1, Arn ]
+                  - !GetAtt [ fooStep, Arn ]
+                  - !GetAtt [ barStep, Arn ]
+                  - !GetAtt [ bazStep, Arn ]
+                  - !GetAtt [ quuxStep, Arn ]
 
   Process1:
     Type: AWS::StepFunctions::StateMachine
