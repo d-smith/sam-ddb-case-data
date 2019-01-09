@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >
+  Step function hello world with SAM!
+Globals:
+  Function:
+    Runtime: "nodejs8.10"
+
+Parameters:
+  Stage:
+    Type: String
+    Default: Dev
+    Description: Stage or environment designator used to discriminate the resources instantiated for a specific stack
+
+Resources:
+
+  StatesExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - !Sub states.${AWS::Region}.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: StatesExecutionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "lambda:InvokeFunction"
+                Resource: '*'
+
+  Process1:
+    Type: AWS::StepFunctions::StateMachine
+    Properties:
+      StateMachineName: !Join [-, [DDBCaseSample, !Ref "Stage"]]
+      DefinitionString: 
+        '{
+          "Comment":"Sample state machine to show case data vs flow data",
+          "StartAt":"step-1",
+          "States": {
+            "step-1": {
+              "Type":"Pass",
+              "Next":"quux"
+            },
+            "quux": {
+              "Type":"Pass",
+              "End":true
+            }
+          }
+        }'
+      RoleArn: !GetAtt [ StatesExecutionRole, Arn ]
+
