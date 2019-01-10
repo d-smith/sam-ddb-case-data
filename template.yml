@@ -148,3 +148,82 @@ Resources:
         }
       RoleArn: !GetAtt [ StatesExecutionRole, Arn ]
 
+  Start:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join [-, [StartDDBCaseSample, !Ref "Stage"]]
+      Handler: start.start
+      CodeUri: src/
+      Role: !GetAtt [ StartExecutionRole, Arn ]
+      Environment:
+        Variables:
+          DYNAMODB_TABLE: !Join [-, [DDBCaseSample, !Ref Stage]]
+          STEP_FUNCTION_ARN: !Ref Process1
+      Events:
+        StartEvent:
+          Type: Api
+          Properties:
+            Path: /start
+            Method: post
+
+  DDBState:
+    Type: 'AWS::DynamoDB::Table'
+    DeletionPolicy: Delete
+    Properties:
+      AttributeDefinitions:
+        -
+          AttributeName: TxnId
+          AttributeType: S
+      KeySchema:
+        -
+          AttributeName: TxnId
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1
+      TableName: !Join [-, [DDBCaseSample, !Ref Stage]]
+
+  StartExecutionRole:
+    Type: AWS::IAM::Role
+    DependsOn:
+      - Process1
+      - DDBState
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: CreateExecution
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - "states:StartExecution"
+                Resource:
+                  - !Ref Process1
+        - PolicyName: AccessDDB
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                Resource:
+                  - !GetAtt DDBState.Arn
+        - PolicyName: AllKidsLoveLog
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:CreateLogGroup
+                Resource:
+                  - "arn:aws:logs:*:*:*"
