@@ -71,7 +71,7 @@ Resources:
     Type: AWS::StepFunctions::StateMachine
   Start:
     Properties:
-      CodeUri: s3://sampack-97068/0bb3f3b21521c71028ac36f319fc5851
+      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
       Environment:
         Variables:
           DYNAMODB_TABLE:
@@ -188,7 +188,7 @@ Resources:
     Type: AWS::IAM::Role
   Step1:
     Properties:
-      CodeUri: s3://sampack-97068/0bb3f3b21521c71028ac36f319fc5851
+      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
       Handler: process.step1
       Role:
         Fn::GetAtt:
@@ -197,7 +197,7 @@ Resources:
     Type: AWS::Serverless::Function
   barStep:
     Properties:
-      CodeUri: s3://sampack-97068/0bb3f3b21521c71028ac36f319fc5851
+      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
       Handler: process.barStep
       Role:
         Fn::GetAtt:
@@ -206,7 +206,7 @@ Resources:
     Type: AWS::Serverless::Function
   bazStep:
     Properties:
-      CodeUri: s3://sampack-97068/0bb3f3b21521c71028ac36f319fc5851
+      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
       Handler: process.bazStep
       Role:
         Fn::GetAtt:
@@ -215,7 +215,7 @@ Resources:
     Type: AWS::Serverless::Function
   fooStep:
     Properties:
-      CodeUri: s3://sampack-97068/0bb3f3b21521c71028ac36f319fc5851
+      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
       Handler: process.fooStep
       Role:
         Fn::GetAtt:
@@ -224,7 +224,7 @@ Resources:
     Type: AWS::Serverless::Function
   quuxStep:
     Properties:
-      CodeUri: s3://sampack-97068/0bb3f3b21521c71028ac36f319fc5851
+      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
       Handler: process.quuxStep
       Role:
         Fn::GetAtt:

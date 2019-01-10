@@ -2,6 +2,11 @@
 
 Case data, dynamoDB sidecar, SAM framework
 
+## Deploy
+
+make
+
+
 ## Notes
 
 To figure out the API endpoint, first list your APIs:

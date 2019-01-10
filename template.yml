@@ -30,35 +30,35 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: process.step1
-      CodeUri: src/
+      CodeUri: src/package.zip
       Role: !GetAtt [ LambdaExecutionRole, Arn ]
 
   fooStep:
     Type: AWS::Serverless::Function
     Properties:
       Handler: process.fooStep
-      CodeUri: src/
+      CodeUri: src/package.zip
       Role: !GetAtt [ LambdaExecutionRole, Arn ]
 
   barStep:
     Type: AWS::Serverless::Function
     Properties:
       Handler: process.barStep
-      CodeUri: src/
+      CodeUri: src/package.zip
       Role: !GetAtt [ LambdaExecutionRole, Arn ]
 
   bazStep:
     Type: AWS::Serverless::Function
     Properties:
       Handler: process.bazStep
-      CodeUri: src/
+      CodeUri: src/package.zip
       Role: !GetAtt [ LambdaExecutionRole, Arn ]
 
   quuxStep:
     Type: AWS::Serverless::Function
     Properties:
       Handler: process.quuxStep
-      CodeUri: src/
+      CodeUri: src/package.zip
       Role: !GetAtt [ LambdaExecutionRole, Arn ]
 
   StatesExecutionRole:
@@ -153,7 +153,7 @@ Resources:
     Properties:
       FunctionName: !Join [-, [StartDDBCaseSample, !Ref "Stage"]]
       Handler: start.start
-      CodeUri: src/
+      CodeUri: src/package.zip
       Role: !GetAtt [ StartExecutionRole, Arn ]
       Environment:
         Variables:

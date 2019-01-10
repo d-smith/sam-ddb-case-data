@@ -1,0 +1,31 @@
+{
+  "name": "sam-ddb-case-data",
+  "version": "1.0.0",
+  "description": "Case data, dynamoDB sidecar, SAM framework",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postpack": "tarball=$(npm list --depth 0 | sed 's/@/-/g; s/ .*/.tgz/g; 1q;'); tar -tf $tarball | sed 's/^package\\///' | zip -@r package; rm $tarball"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/d-smith/sam-ddb-case-data.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/d-smith/sam-ddb-case-data/issues"
+  },
+  "homepage": "https://github.com/d-smith/sam-ddb-case-data#readme",
+  "devDependencies": {
+    "aws-sdk": "^2.386.0"
+  },
+  "dependencies": {
+    "chance": "^1.0.18",
+    "middy": "^0.20.0"
+  },
+  "bundleDependencies": [
+    "middy",
+    "chance"
+  ]
+}
