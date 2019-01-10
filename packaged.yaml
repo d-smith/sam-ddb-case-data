@@ -4,6 +4,13 @@ Description: 'Step function hello world with SAM!
   '
 Globals:
   Function:
+    Environment:
+      Variables:
+        DYNAMODB_TABLE:
+          Fn::Join:
+          - '-'
+          - - DDBCaseSample
+            - Ref: Stage
     Runtime: nodejs8.10
 Parameters:
   Stage:
@@ -39,6 +46,20 @@ Resources:
           Principal:
             Service: lambda.amazonaws.com
         Version: '2012-10-17'
+      Path: /
+      Policies:
+      - PolicyDocument:
+          Statement:
+          - Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            Effect: Allow
+            Resource:
+            - Fn::GetAtt:
+              - DDBState
+              - Arn
+          Version: '2012-10-17'
+        PolicyName: AccessDDB
     Type: AWS::IAM::Role
   Process1:
     Properties:
@@ -71,14 +92,9 @@ Resources:
     Type: AWS::StepFunctions::StateMachine
   Start:
     Properties:
-      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
+      CodeUri: s3://sampack-97068/48f4c477ab3b1cc654c26aea072c8e66
       Environment:
         Variables:
-          DYNAMODB_TABLE:
-            Fn::Join:
-            - '-'
-            - - DDBCaseSample
-              - Ref: Stage
           STEP_FUNCTION_ARN:
             Ref: Process1
       Events:
@@ -188,7 +204,7 @@ Resources:
     Type: AWS::IAM::Role
   Step1:
     Properties:
-      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
+      CodeUri: s3://sampack-97068/48f4c477ab3b1cc654c26aea072c8e66
       Handler: process.step1
       Role:
         Fn::GetAtt:
@@ -197,7 +213,7 @@ Resources:
     Type: AWS::Serverless::Function
   barStep:
     Properties:
-      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
+      CodeUri: s3://sampack-97068/48f4c477ab3b1cc654c26aea072c8e66
       Handler: process.barStep
       Role:
         Fn::GetAtt:
@@ -206,7 +222,7 @@ Resources:
     Type: AWS::Serverless::Function
   bazStep:
     Properties:
-      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
+      CodeUri: s3://sampack-97068/48f4c477ab3b1cc654c26aea072c8e66
       Handler: process.bazStep
       Role:
         Fn::GetAtt:
@@ -215,7 +231,7 @@ Resources:
     Type: AWS::Serverless::Function
   fooStep:
     Properties:
-      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
+      CodeUri: s3://sampack-97068/48f4c477ab3b1cc654c26aea072c8e66
       Handler: process.fooStep
       Role:
         Fn::GetAtt:
@@ -224,7 +240,7 @@ Resources:
     Type: AWS::Serverless::Function
   quuxStep:
     Properties:
-      CodeUri: s3://sampack-97068/b2516ff1f05234472d168fc13d5bb219
+      CodeUri: s3://sampack-97068/48f4c477ab3b1cc654c26aea072c8e66
       Handler: process.quuxStep
       Role:
         Fn::GetAtt:

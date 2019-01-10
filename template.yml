@@ -5,6 +5,9 @@ Description: >
 Globals:
   Function:
     Runtime: "nodejs8.10"
+    Environment:
+      Variables:
+        DYNAMODB_TABLE: !Join [-, [DDBCaseSample, !Ref Stage]]
 
 Parameters:
   Stage:
@@ -24,6 +27,18 @@ Resources:
             Principal:
               Service: lambda.amazonaws.com
             Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: AccessDDB
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:PutItem
+                  - dynamodb:GetItem
+                Resource:
+                  - !GetAtt DDBState.Arn
 
 
   Step1:
@@ -157,7 +172,6 @@ Resources:
       Role: !GetAtt [ StartExecutionRole, Arn ]
       Environment:
         Variables:
-          DYNAMODB_TABLE: !Join [-, [DDBCaseSample, !Ref Stage]]
           STEP_FUNCTION_ARN: !Ref Process1
       Events:
         StartEvent:
