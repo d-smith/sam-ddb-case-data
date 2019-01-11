@@ -47,6 +47,8 @@ curl -d '{"metavar":"notfoo"}' -H "Content-Tyication/json" http://127.0.0.1:3000
 
 You might need to provide the `--profile` and `--region` arguments as well depending on the environment you run it from.
 
+For hot reloading, you have to repackage the code via `make package`
+
 ## Notes
 
 Add blurb about using npm pack for packaging, link to [this](https://hackernoon.com/package-lambda-functions-the-easy-way-with-npm-e38fc14613ba) blog post.

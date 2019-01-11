@@ -180,6 +180,20 @@ Resources:
             Path: /start
             Method: post
 
+  ProcessData:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Join [-, [ProcessDataDDBCaseSample, !Ref "Stage"]]
+      Handler: pdata.retrieve
+      CodeUri: src/package.zip
+      Role: !GetAtt [ ProcessDataExecutionRole, Arn ]
+      Events:
+        StartEvent:
+          Type: Api
+          Properties:
+            Path: /casedata/{txnid}
+            Method: get
+
   DDBState:
     Type: 'AWS::DynamoDB::Table'
     DeletionPolicy: Delete
@@ -228,6 +242,42 @@ Resources:
               - Effect: Allow
                 Action:
                   - dynamodb:PutItem
+                Resource:
+                  - !GetAtt DDBState.Arn
+        - PolicyName: AllKidsLoveLog
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:CreateLogGroup
+                Resource:
+                  - "arn:aws:logs:*:*:*"
+
+  ProcessDataExecutionRole:
+    Type: AWS::IAM::Role
+    DependsOn:
+      - Process1
+      - DDBState
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+        - PolicyName: AccessDDB
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:GetItem
                 Resource:
                   - !GetAtt DDBState.Arn
         - PolicyName: AllKidsLoveLog
