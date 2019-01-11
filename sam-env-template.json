@@ -1,0 +1,6 @@
+{
+    "Start" : {
+        "DYNAMODB_TABLE":"DDBCaseSample-YOUR_STAGE",
+        "STEP_FUNCTION_ARN":"arn:aws:states:YOUR_REGION:YOUR_ACCOUNT_NO:stateMachine:DDBCaseSample-YOUR_STAGE"
+    }
+}

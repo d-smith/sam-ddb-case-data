@@ -29,7 +29,7 @@ const writeInputData = async (txnid, inputData) => {
         }
     };
 
-    console.log('put item');
+    console.log(`put item - table ${process.env.DYNAMODB_TABLE}`);
     let result = await docClient.put(params).promise();
     return result;
     
