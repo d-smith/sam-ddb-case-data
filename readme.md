@@ -52,3 +52,8 @@ For hot reloading, you have to repackage the code via `make package`
 ## Notes
 
 Add blurb about using npm pack for packaging, link to [this](https://hackernoon.com/package-lambda-functions-the-easy-way-with-npm-e38fc14613ba) blog post.
+
+## TODO
+
+Create an API gateway role to allow it to invoke the API
+Configure a single API gateway stage if needed
