@@ -54,7 +54,7 @@ const startCore = async (event, context) => {
         transactionId: context.txnId
     };
 
-    return {statusCode: 200, body: JSON.stringify(responseBody)};
+    return {statusCode: 200, body: responseBody};
 }
 
 module.exports.start = middy(startCore)

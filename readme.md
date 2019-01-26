@@ -46,4 +46,5 @@ Add blurb about using npm pack for packaging, link to [this](https://hackernoon.
 
 ## Todo
 
-* can we put the header vals into context via the template body?
+* Can we put the header vals into context via the template body?
+* Enable cloud watch logs for the API gateway

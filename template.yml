@@ -236,58 +236,7 @@ Resources:
             validateRequestBody: true
 
 
-#        swagger: 2,0
-#        info: 
-#          title: 
-#            Ref: AWS::StackName
-#        paths:
-#          /:
-#            post:
-#              consumes:
-#              - "application/json"
-#              produces:
-#              - "application/json"
-#              parameters:
-#              - in: body
-#                name: "StartDataInputModel"
-#                required: true
-#                schema:
-#                  $ref: "#/definitions/StartDataInputModel"
-#              responses:
-#                '200':
-#                  description: '200 ok'
-#                  schema:
-#                    $ref: "#/definitions/StartResponseModel"
-#              x-amazon-apigateway-request-validator: "Validate body"
-#              x-amazon-apigateway-integration:
-#                uri:
-#                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Start.Arn}/start
-#                responses:
-#                  default:
-#                    statusCode: "200"
-#                requestTemplates:
-#                  application/json: $input.json('$')
-#                passthroughBehavior: "never"
-#                httpMethod:  "POST"
-#                contentHandling: "CONVERT_TO_TEXT"
-#                type: "Aws"
-#        definitions:
-#          StartResponseModel:
-#            type: "string"
-#            properties:
-#              transaction-id
-#          StartDataInputModel:
-#            type: "object"
-#            required:
-#            - "metavar"
-#            properties:
-#              metavar:
-#                type: "string"
-#            title: "StartDataInputModel"
-#        x-amazon-apigateway-request-validators:
-#          Validate body:
-#            validateRequestParameters: false
-#            validateRequestBody: true
+
 
 
   Start:
@@ -308,13 +257,6 @@ Resources:
             Method: POST
             RestApiId:
                 Ref: MyApi
-
-#      Events:
-#        StartEvent:
-#          Type: Api
-#          Properties:
-#            Path: /start
-#           Method: post
 
   ProcessData:
     Type: AWS::Serverless::Function
