@@ -1,0 +1,39 @@
+swagger: '2.0'
+info:
+  version: "1"
+  title:
+    "Ref: AWS::StaskName"
+paths:
+  /:
+    post:
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: body
+        name: "StartDataInputModel"
+        required: true
+        schema:
+          $ref: "#/definitions/StartDataInputModel"
+      responses:
+        '200':
+          description: '200 ok'
+          schema:
+            $ref: "#/definitions/StartResponseModel"
+definitions:
+  StartDataInputModel:
+    type: "object"
+    required:
+    - "metavar"
+    properties:
+      metavar:
+        type: "string"
+  StartResponseModel:
+    type: "object"
+    required:
+    - "transactionId"
+    properties:
+      transactionId:
+        type: "string"
+    
