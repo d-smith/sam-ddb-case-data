@@ -195,7 +195,7 @@ Resources:
               x-amazon-apigateway-request-validator: "Validate body"
               x-amazon-apigateway-integration:
                 uri:
-                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Start.Arn}/start
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Start.Arn}/invocations
                 responses:
                   default:
                     statusCode: "200"
