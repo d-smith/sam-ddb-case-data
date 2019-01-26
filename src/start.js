@@ -2,7 +2,7 @@ const AWS = require('aws-sdk');
 const stepFunctions = new AWS.StepFunctions();
 
 const middy = require('middy');
-const { jsonBodyParser, validator, httpErrorHandler } = require('middy/middlewares')
+const { jsonBodyParser, httpErrorHandler } = require('middy/middlewares')
 const txnid = require('./middleware/txnid');
 
 const startProcess = async (processInput) => {
@@ -37,13 +37,14 @@ const writeInputData = async (txnid, inputData) => {
 
 const startCore = async (event, context) => {
     console.log(`create called with context ${JSON.stringify(context)}`);
-    console.log(`input payload is ${JSON.stringify(event['body'])}`);
+    console.log(`event is ${JSON.stringify(event)}`);
+    console.log(`input payload is ${JSON.stringify(event)}`);
 
     let processInput = {};
     processInput['processData'] = context.txnId;
 
     //TODO - proper error handling...
-    let putResult = await writeInputData(context.txnId, event['body']);
+    let putResult = await writeInputData(context.txnId, event);
     console.log(`putResult response is ${putResult}`);
 
     let result = await startProcess(JSON.stringify(processInput));
@@ -56,21 +57,7 @@ const startCore = async (event, context) => {
     return {statusCode: 200, body: JSON.stringify(responseBody)};
 }
 
-const inputSchema = {
-    type: 'object',
-    properties: {
-        body: {
-            type: 'object',
-            required: ['metavar'],
-            properties: {
-                metavar: { type: 'string', minLength: 1 }
-            }
-        }
-    }
-}
-
 module.exports.start = middy(startCore)
     .use(jsonBodyParser())
-    .use(validator({ inputSchema }))
     .use(txnid())
     .use(httpErrorHandler());

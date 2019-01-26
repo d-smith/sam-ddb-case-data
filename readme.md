@@ -11,24 +11,15 @@ make
 
 ## Execute
 
-To figure out the API endpoint, first list your APIs:
+To figure out the API endpoint, describe the stack and get the endpoint out the output value of apiGatewayInvokeUrl
 
 ```console
-aws apigateway get-rest-apis
+aws cloudformation describe-stacks --stack-name samddbcase
 ```
-
-Then, get the deets for your particular API:
-
-```console
-aws apigateway get-stages --rest-api-id asrqll225d
-```
-
-Now use the info to form the endpoint - `https://{api id}.execute-api.{region}.amazonaws.com/{stage}/start`, e.g. `https://asrqll225d.execute-api.us-east-1.amazonaws.com/Stage/start`
-
 Then start the process via the endpoint:
 
 ```console
-curl -d '{"metavar":"notfoo"}' -H "Content-Type:application/json"  https://dvbbe3eh0g.execute-api.us-east-1.amazonaws.com/Stage/start
+curl -d '{"metavar":"notfoo"}' -H "Content-Type:application/json"  https://god29cqly6.execute-api.us-east-1.amazonaws.com/Dev/start
 ```
 
 ## SAM Local
@@ -53,7 +44,6 @@ For hot reloading, you have to repackage the code via `make package`
 
 Add blurb about using npm pack for packaging, link to [this](https://hackernoon.com/package-lambda-functions-the-easy-way-with-npm-e38fc14613ba) blog post.
 
-## TODO
+## Todo
 
-Create an API gateway role to allow it to invoke the API
-Configure a single API gateway stage if needed
+* can we put the header vals into context via the template body?

@@ -35,6 +35,13 @@ Resources:
             Statement:
               - Effect: Allow
                 Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                Resource: '*'
+
+              - Effect: Allow
+                Action:
                   - dynamodb:PutItem
                   - dynamodb:GetItem
                 Resource:
@@ -166,14 +173,16 @@ Resources:
   MyApi:
     Type: AWS::Serverless::Api
     Properties:
-      StageName: dev
+      StageName: 
+        Ref: 'Stage'
+      EndpointConfiguration: 'REGIONAL'
       DefinitionBody:
 
         swagger: '2.0'
         info:
           version: "1"
           title:
-            "Ref: AWS::StaskName"
+            Ref: "AWS::StackName"
         paths:
           /start:
             post:
@@ -418,3 +427,7 @@ Resources:
                   - logs:CreateLogGroup
                 Resource:
                   - "arn:aws:logs:*:*:*"
+
+Outputs:
+  apiGatewayInvokeURL:
+    Value: !Sub "https://${MyApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}"
