@@ -24,6 +24,16 @@ curl -d '{"metavar":"notfoo"}' -H "Content-Type:application/json"  https://god29
 
 ## SAM Local
 
+### Limitations
+
+Note: schema validation and template mapping are not support with sam-local at the moment - see this [feature request](https://github.com/awslabs/aws-sam-cli/issues/364) for more details.
+
+The request mapping template has been aligned with how SAM local works, but the response available via the CLI against a SAM local endpoint does not align with the response obtained through the gateway - you can review what the lambda function is returning via the output logging in SAM local.
+
+Note that the code uri is package.zip - you will need to do a `make package` to pick up changes, or change the CodeUri is if need to do some hot reloading.
+
+### General Guide
+
 You can work with local instances of your SAM lambdas using sam-local. You need to inject the environment variable values into the runtime environment via a json file. Use `sam-env-template.json` as a starting point - edit a copy of the file to reflect your environment and reference it on the command line.  
 
 ```console

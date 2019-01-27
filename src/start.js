@@ -38,13 +38,13 @@ const writeInputData = async (txnid, inputData) => {
 const startCore = async (event, context) => {
     console.log(`create called with context ${JSON.stringify(context)}`);
     console.log(`event is ${JSON.stringify(event)}`);
-    console.log(`input payload is ${JSON.stringify(event)}`);
+    console.log(`input payload is ${JSON.stringify(event['body'])}`);
 
     let processInput = {};
     processInput['processData'] = context.txnId;
 
     //TODO - proper error handling...
-    let putResult = await writeInputData(context.txnId, event);
+    let putResult = await writeInputData(context.txnId, event['body']);
     console.log(`putResult response is ${putResult}`);
 
     let result = await startProcess(JSON.stringify(processInput));
@@ -54,7 +54,17 @@ const startCore = async (event, context) => {
         transactionId: context.txnId
     };
 
-    return {statusCode: 200, body: responseBody};
+    let headers = {};
+    headers['Content-Type'] = 'application/json';
+
+    let response = {
+        statusCode: 200, 
+        body: responseBody,
+        headers: headers,
+    };
+
+    console.log(`returning ${JSON.stringify(response)}`);
+    return response;
 }
 
 module.exports.start = middy(startCore)

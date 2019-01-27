@@ -206,10 +206,20 @@ Resources:
                 uri:
                   Fn::Sub: arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${Start.Arn}/invocations
                 responses:
+#                  '200': 
+#                    statusCode: 200
+#                    responseTemplates:
+#                      application/json: |
+#                        {
+#                         $input.path('$').body 
+#                        }
                   default:
                     statusCode: "200"
                 requestTemplates:
-                  application/json: $input.json('$')
+                  application/json: |
+                    { 
+                      "body" : $input.json('$')
+                    }
                 passthroughBehavior: "never"
                 httpMethod:  "POST"
                 contentHandling: "CONVERT_TO_TEXT"
