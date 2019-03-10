@@ -8,6 +8,7 @@ Globals:
     Environment:
       Variables:
         DYNAMODB_TABLE: !Join [-, [DDBCaseSample, !Ref Stage]]
+        EVENT_TOPIC: !Join [-, [ExecutionEvents, !Ref Stage]]
 
 Parameters:
   Stage:
@@ -46,6 +47,10 @@ Resources:
                   - dynamodb:GetItem
                 Resource:
                   - !GetAtt DDBState.Arn
+              - Effect: Allow
+                Action:
+                  - sns:Publish
+                Resource: !Ref ProcessEvents
 
 
   Step1:
@@ -343,6 +348,12 @@ Resources:
                   - logs:CreateLogGroup
                 Resource:
                   - "arn:aws:logs:*:*:*"
+
+  ProcessEvents:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Join [-, [ExecutionEvents, !Ref Stage]]
+      TopicName: !Join [-, [ExecutionEvents, !Ref Stage]]
 
   ProcessDataExecutionRole:
     Type: AWS::IAM::Role
