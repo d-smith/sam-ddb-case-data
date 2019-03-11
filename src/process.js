@@ -1,5 +1,6 @@
 const middy = require('middy');
 const ddbdata = require('./middleware/ddbdata');
+const activityevents = require('./middleware/activityevents');
 
 const step1Core = async (event, context) => {
     console.log(`step 1 event: ${JSON.stringify(event)}`);
@@ -11,8 +12,12 @@ const step1Core = async (event, context) => {
     //Return case data and state machine data
     let stateMachineData = {
         processData: event['processData'],
+        processName: event['processName'],
+        processVersion: event['processVersion'],
         metavar: caseData.processInput.metavar
     };
+
+    console.log(`returning stateMachineData ${JSON.stringify(stateMachineData)}`);
 
     return { caseData, stateMachineData };
 }
@@ -28,7 +33,9 @@ const makeNamedStep = (name) => {
 
         //Return case data and state machine data
         let stateMachineData = {
-            processData: event['processData']
+            processData: event['processData'],
+            processName: event['processName'],
+            processVersion: event['processVersion']
         };
         return { caseData, stateMachineData };
     };
@@ -36,20 +43,25 @@ const makeNamedStep = (name) => {
 
 module.exports.step1
     = middy(step1Core)
+        .use(activityevents(process.env.EVENT_TOPIC_ARN))
         .use(ddbdata());
 
 module.exports.fooStep
     = middy(makeNamedStep('foo'))
+        .use(activityevents(process.env.EVENT_TOPIC_ARN))
         .use(ddbdata());
 
 module.exports.barStep
     = middy(makeNamedStep('bar'))
+        .use(activityevents(process.env.EVENT_TOPIC_ARN))
         .use(ddbdata());
 
 module.exports.bazStep
     = middy(makeNamedStep('baz'))
+        .use(activityevents(process.env.EVENT_TOPIC_ARN))
         .use(ddbdata());
 
 module.exports.quuxStep
     = middy(makeNamedStep('quux'))
+        .use(activityevents(process.env.EVENT_TOPIC_ARN))
         .use(ddbdata());

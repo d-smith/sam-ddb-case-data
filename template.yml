@@ -8,7 +8,9 @@ Globals:
     Environment:
       Variables:
         DYNAMODB_TABLE: !Join [-, [DDBCaseSample, !Ref Stage]]
-        EVENT_TOPIC: !Join [-, [ExecutionEvents, !Ref Stage]]
+        EVENT_TOPIC_ARN: !Ref ProcessEvents
+        PROCESS_NAME: SampleChoiceSidecar
+        PROCESS_VERSION: v1.ddb
 
 Parameters:
   Stage:
