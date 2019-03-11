@@ -4,6 +4,8 @@ Case data, dynamoDB sidecar, SAM framework
 
 ## Deploy
 
+Edit the makefile to reflect your situation, then...
+
 ```console
 make
 ```
@@ -21,6 +23,12 @@ Then start the process via the endpoint:
 ```console
 curl -d '{"metavar":"notfoo"}' -H "Content-Type:application/json"  https://god29cqly6.execute-api.us-east-1.amazonaws.com/Dev/start
 ```
+
+## Events
+
+This example includes a simple middleware component (`activityevents`) to emit an event on the start of an activity, and on the completion of an activity. While certainly not exhaustive or production ready, it shows how emitting events can be layered into a step functions implementation. 
+
+An important next step is to determine how to handle task failures and process failure - include a flow to a notification arn in the state machine definition, or integrate some error handling into the middy flow (or both).
 
 ## SAM Local
 

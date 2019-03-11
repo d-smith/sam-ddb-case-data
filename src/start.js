@@ -5,6 +5,9 @@ const middy = require('middy');
 const { jsonBodyParser, httpErrorHandler } = require('middy/middlewares')
 const txnid = require('./middleware/txnid');
 
+const processName = process.env.PROCESS_NAME;
+const processVersion = process.env.PROCESS_VERSION;
+
 const startProcess = async (processInput) => {
 
     var params = {
@@ -40,8 +43,11 @@ const startCore = async (event, context) => {
     console.log(`event is ${JSON.stringify(event)}`);
     console.log(`input payload is ${JSON.stringify(event['body'])}`);
 
-    let processInput = {};
-    processInput['processData'] = context.txnId;
+    let processInput = {
+        processData: context.txnId,
+        processName: processName,
+        processVersion: processVersion
+    };
 
     //TODO - proper error handling...
     let putResult = await writeInputData(context.txnId, event['body']);
