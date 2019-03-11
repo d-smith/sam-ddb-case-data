@@ -58,6 +58,18 @@ module.exports = (topicArn) => {
                 console.log('activityevents - publish end event');
                 console.log(`activityevents after - response: ${JSON.stringify(handler.response)}`);
                    
+                console.log(`activityevents - publish end event to ${topicArn}`);
+
+                  let event = {
+                      eventType: 'endActivity',
+                      processInstanceId: handler.event.processData,
+                      processName: handler.event.processName,
+                      processVersion: handler.event.processVersion,
+                      activity: handler.context.functionName,
+                      invokeid: handler.context.invokeid
+                  };
+
+                  await publishActivityEvent(topicArn, event);
             };
           }
 

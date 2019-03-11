@@ -14,6 +14,8 @@ const step1Core = async (event, context) => {
         processData: event['processData'],
         processName: event['processName'],
         processVersion: event['processVersion'],
+        activity: context.functionName,
+        invokeid: context.invokeid,
         metavar: caseData.processInput.metavar
     };
 
@@ -35,7 +37,9 @@ const makeNamedStep = (name) => {
         let stateMachineData = {
             processData: event['processData'],
             processName: event['processName'],
-            processVersion: event['processVersion']
+            processVersion: event['processVersion'],
+            activity: context.functionName,
+            invokeid: context.invokeid,
         };
         return { caseData, stateMachineData };
     };
