@@ -26,7 +26,7 @@ curl -d '{"metavar":"notfoo"}' -H "Content-Type:application/json"  https://god29
 
 ## Events
 
-This example includes a simple middleware component to emit an event on the start of an activity, and on the completion of an activity. While certainly not exhaustive or production ready, it shows how emitting events can be layered into a step functions implementation. 
+This example includes a simple middleware component (`activityevents`) to emit an event on the start of an activity, and on the completion of an activity. While certainly not exhaustive or production ready, it shows how emitting events can be layered into a step functions implementation. 
 
 An important next step is to determine how to handle task failures and process failure - include a flow to a notification arn in the state machine definition, or integrate some error handling into the middy flow (or both).
 
